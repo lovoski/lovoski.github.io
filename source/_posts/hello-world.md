@@ -50,3 +50,16 @@ $$
 ![](hello-world/armadillo.png)
 
 This seems better
+
+### Code Syntax
+
+```cpp
+void evaluate_running_time(std::function<void(void)> &&code_block, const std::string block_name) {
+  auto start = std::chrono::high_resolution_clock::now();
+  std::cout << "start code_block:" << block_name << std::endl;
+  code_block();
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> time = end-start;
+  std::cout << "end code_block:" << block_name  << ", running time : " << time.count() << " s" << std::endl;
+}
+```
