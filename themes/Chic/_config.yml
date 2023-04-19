@@ -15,7 +15,7 @@ favicon: /icon.svg
 nickname: Lovoski
 
 ### this variable is MarkDown form.
-description: Lorem ipsum dolor sit amet, **consectetur adipiscing elit.** <br>Fusce eget urna vitae velit *eleifend interdum at ac* nisi.
+description: 学术，生活的记录
 avatar: /image/abstract.jpg
 
 # main menu navigation
@@ -66,7 +66,7 @@ post_category_enable: true
 post_copyright_enable: true
 
 post_copyright_author_enable: true
-post_copyright_permalink_enable: true
+post_copyright_permalink_enable: false
 post_copyright_license_enable: false
 post_copyright_license_text: Copyright (c) 2019 <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE
 post_copyright_slogan_enable: false
