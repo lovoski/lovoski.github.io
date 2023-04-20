@@ -104,3 +104,16 @@ mathjax:
   import: demand # global or demand
   ## global: all pages will load mathjax,this will degrade performance and some grammers may be parsed wrong.
   ## demand: Recommend option,if your post need fomula, you can declare 'mathjax: true' in Front-matter
+gitalk:  
+  enable: true  
+  ClientID: 6d2e72900bb80e90ea3f #Client ID,填入上一步获取的ID
+  ClientSecret: dd0c30c869702d38c3a9d04fcf8943e9df1259f7 #Client Secret，填入上一步获取的ID  
+  repo: lovoski.github.io #你要存放的项目名,如果博客部署在github可以放一起
+  owner: lovoski #这个项目名的拥有者（GitHub账号或组织）
+  adminUser: ['lovoski'] #管理员用户  
+  ID: location.pathname #页面ID  
+  labels: ['Gitalk'] #GitHub issues的标签  
+  perPage: 10 #每页多少个评论  
+  pagerDirection: last #排序方式是从旧到新（first），还是从新到旧（last）  
+  createIssueManually: true #是否自动创建isssue，自动创建需要当前登录的用户为adminuser  
+  distractionFreeMode: false #是否启用快捷键(cmd|ctrl + enter) 提交评论
