@@ -101,7 +101,7 @@ scripts:
 ## https://www.mathjax.org
 mathjax:
   enable: true
-  import: demand # global or demand
+  import: global # global or demand
   ## global: all pages will load mathjax,this will degrade performance and some grammers may be parsed wrong.
   ## demand: Recommend option,if your post need fomula, you can declare 'mathjax: true' in Front-matter
 gitalk:  
