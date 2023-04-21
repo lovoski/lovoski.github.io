@@ -56,3 +56,84 @@ git config --global https.proxy "<ip>:<port>"
 ```
 
 ## 我该怎么组织一个自己的 cmake 项目？
+
+- 首先要确认需要的项目的大致结构，比较常见的是这样的
+- root folder
+  - lib_a
+  - lib_b
+  - sub folder
+    - exe_a
+    - lib_c
+  - exe_b
+- 在上面的例子中，我们假设`exe_a`是一个用于测试的可执行程序，依赖于`lib_a`，`lib_a`和`lib_b`是最基本的库文件，`lib_c`是一个依赖于`lib_a`的库文件，`exe_b`是我们的主程序，主程序同时依赖于`lib_a`，`lib_b`和`lib_c`。
+- 我们首先要熟悉库文件和可执行文件的`CMakeLists.txt`的写法下面是一个库文件的`CMakeLists.txt`的例子
+```cmake
+# 要求 cmake 的最低版本
+cmake_minimum_required(VERSION 3.20)
+# 这个子程序的项目名称
+# 在这里会生成一个名为 Model3D.lib 的库文件
+project(Model3D)
+set(CMAKE_CXX_STANDARD 17)
+# 设置产生二进制文件的位置
+# 这里需要提一下，PROJECT_SOURCE_DIR是不会随着当前的项目变化的
+# 在整个项目里面不管有多少子项目都是同一个宏
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
+
+# 把当前的相对路径下的 src 文件夹下的所有 .cpp 文件记录到变量 SRC_FILES 里面
+file(GLOB SRC_FILES src/*.cpp)
+# 指定当前的 include 路径为相对路径下的 include 文件夹
+include_directories(include)
+# 用于找到需要的第三方依赖库
+find_package(CGAL CONFIG REQUIRED)
+find_package(Eigen3 CONFIG REQUIRED NO_MODULE)
+find_package(libigl CONFIG REQUIRED)
+
+# 生成库文件
+add_library(${PROJECT_NAME} STATIC ${SRC_FILES})
+# 为生成的库文件链接第三方库
+target_link_libraries(${PROJECT_NAME} PRIVATE CGAL::CGAL Eigen3::Eigen igl::core igl::common)
+```
+- 下面的是一个可执行文件的`CMakeLists.txt`的例子
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(CoveringForGeodesic)
+set(CMAKE_CXX_STANDARD 17)
+
+# 设置是否要编译下面的这些子项目
+option(BUILD_MODEL3D "Build subproject model3d statically" ON)
+option(BUILD_GEODESIC "Build subproject geodesic statically" ON)
+option(BUILD_RIDGE_STRUCTURE "Build subproject ridge_structure statically" ON)
+
+file(GLOB MAIN_SRC_FILES *.cpp *.hpp)
+# 这里还要添加自己依赖的子项目库的头文件
+include_directories(
+  ${CMAKE_SOURCE_DIR}/Geodesic/include
+  ${CMAKE_SOURCE_DIR}/Model3D/include
+  ${CMAKE_SOURCE_DIR}/CommonAlgorithms
+  ${CMAKE_SOURCE_DIR}/RidgeStructure/include
+)
+link_directories(${PROJECT_SOURCE_DIR}/build)
+find_package(Eigen3 CONFIG REQUIRED NO_MODULE)
+find_package(libigl CONFIG REQUIRED)
+
+if (${BUILD_MODEL3D})
+  add_subdirectory(Model3D)
+endif()
+
+if (${BUILD_GEODESIC})
+  add_subdirectory(Geodesic)
+endif()
+
+if (${BUILD_RIDGE_STRUCTURE})
+  add_subdirectory(RidgeStructure)
+endif()
+
+# 生成二进制文件
+add_executable(${PROJECT_NAME} ${MAIN_SRC_FILES})
+# 链接库文件
+# 这里直接用子项目的 PROJECT_NAME 作为链接的标识
+target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen igl::core igl::common Model3D Geodesic RidgeStructure)
+```
+- 从上面的两个例子已经可以看出，如果我需要把自己写的本地库项目连接到项目内的可执行文件里，需要把库项目的头文件用`include_directories`设置到`include`路径上，在之后通过`target_link_libraries`用库项目的`PROJECT_NAME`直接链接到可执行文件。
+
+## find_package 做了些什么？
