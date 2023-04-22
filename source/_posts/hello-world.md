@@ -1,6 +1,7 @@
 ---
 title: hello world
 date: 2023-04-19 16:46:14
+comments: true
 tags:
 - environment
 categories:
