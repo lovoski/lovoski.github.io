@@ -1,11 +1,6 @@
 ---
-title: vcpkg+cmake+vscode环境搭建
-date: 2023-04-20 16:19:07
-comments: false
+title: vcpkg环境搭建
 tags:
-- environment
-categories:
-- [Environment]
 ---
 因为需要用到的工具大多只有`windows`平台的，我的代码环境只有少量运行在`wsl2`上，大部分需要在`windows`编译运行。为了维护c++用到的大量第三方库，我用[vcpkg](https://vcpkg.io/)和[cmake](https://cmake.org/)搭建出c++的编译工具链。我下面直接用Q&A的方式快速表明解决方案。
 
@@ -39,7 +34,6 @@ git config --global https.proxy "<ip>:<port>"
 ## vscode 怎么结合 cmake 编译调试程序？
 
 - `vscode`有一个微软的官方插件`CMake Tools`，集成了`cmake`的功能，确保安装了`cmake`并添加到环境变量之后可以直接用`ctrl`+`shift`+`p`调出命令盘，输入`cmake:`，接下来选择其中的`configure`，`build`就可以了。下面是`vscode`调出的操作盘。
-![fig](vcpkg-cmake-vscode环境搭建/vscode_cmake_tools.png)
 - 如果需要给程序添加断点，逐步debug调试，可以在当前的项目根目录的`.vscode`文件夹里面创建或者修改`settings.json`为下面的样式
 ```json
 {
