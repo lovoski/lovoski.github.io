@@ -12,6 +12,7 @@ tags:
 写这一篇笔记主要是记录我在用`meshlab`处理模型中遇到的问题和相应的解决方案。
 ## 一些常用的快捷键
 - `ctrl`+`f`：打开右上角的查询窗口，可以用来快捷输入要处理的操作
+- `esc`：可以在显示面的详细信息、选中状态下恢复自由移动视角，再次按下回到原来的状态
 - `鼠标中键拖动`：平移模型，用来更好观察模型
 
 ## 处理问题的常用方法
@@ -71,6 +72,7 @@ with open(argv[1], 'r') as f:
       continue
     if last_number != '0':
       fids.write(last_number+'\n')
+fids.close()
 ```
 
 ### 通过已有的 `index` 选中顶点或者面
@@ -78,3 +80,42 @@ with open(argv[1], 'r') as f:
 最常用的方法是在搜索框里面输入 `conditional selection` 可以找到选择点和选择面的对话框，可以输入 `bool表达式`。
 
 ![fig7](meshlab的使用/fig7.png)
+
+一般来说说会手动生成符合这种格式的字符串，可以考虑下面的 `python` 脚本。
+```python
+from sys import argv
+from sys import exit
+if len(argv) < 2:
+  print('usage:\n[script] [fids_file]')
+  exit(-1)
+bool_expression = open('bool_expression.txt', 'w+')
+with open(argv[1], 'r') as f:
+  for line in f:
+    bool_expression.write('fid=='+line+'||')
+bool_expression.close()
+```
+
+### 多边形模型保存为三角形模型
+需要在导出模型保存的时候取消 `polygon` 的选择（`meshlab` 里面对模型做的操作不会直接影响本地文件，需要 `export` 才真的保存了）。
+
+![fig:save](meshlab的使用/save_panel.png)
+
+### 从高面数模型获取低面数模型
+如果算法的表现在低面数模型上效果更明显，可以找一个高面数模型转化成低面数的，在搜索框输入 `simplification` ，可以得到下面的几个结果。
+
+![fig8](meshlab的使用/fig9.png)
+
+可以用上图中蓝色选中项转化现在的模型，如果现在的模型有纹理坐标，下面的 `(with texture)` 选项还可以一定程度上保留纹理坐标。
+
+![fig:compare](meshlab的使用/compare.png)
+
+### 从低面数模型获取高面数模型
+可以直接在搜索框输入 `subdivision` 。
+
+![fig10](meshlab的使用/fig10.png)
+1. 中点细分：
+按照三角形边的中点把一个三角形分成4个小三角形，效果见下图。
+
+![fig:subdivision_midpoint](meshlab的使用/subdivision_midpoint.png)
+
+不过如果只选中一个三角形，与这个三角形面相邻的三个三角形就会变成多边形，虽然 `.obj` 文件格式里面可以用 `f id0 id1 ... idn` 的格式表示多边形面，不要求所有的面都是三角形，但是 `meshlab` 里面用中点细分需要选中至少四个面，让选中区域都是三角形。
