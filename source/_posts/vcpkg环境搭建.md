@@ -81,7 +81,7 @@ find_package(libigl 2.3 CONFIG REQUIRED)
 3. `f5` ：跳转到下一个断点
 4. `f10` ：单步调试
 
-`vscode`有一个微软的官方插件 `CMake Tools`，集成了 `cmake`的功能，确保安装了 `cmake` 并添加到环境变量之后可以直接用 `ctrl`+`shift`+`p`调出命令盘，输入 `cmake:`，接下来选择其中的 `configure`，`build`就可以了。下面是 `vscode`调出的操作盘。
+`vscode`有一个微软的官方插件 `CMake Tools`，集成了 `cmake`的功能，确保安装了 `cmake` 并添加到环境变量之后可以直接用 `ctrl`+`shift`+`p`调出命令盘，输入 `cmake:`，接下来选择其中的 `configure`，`build`就可以了。
 
 如果需要给程序添加断点，逐步debug调试，可以在当前的项目根目录的 `.vscode` 文件夹里面创建或者修改 `settings.json` 为下面的样式
 
