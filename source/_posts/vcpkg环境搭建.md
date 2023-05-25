@@ -1,6 +1,12 @@
 ---
 title: vcpkg环境搭建
+category:
+  - [Environement]
+comments: false
+date: 2023-05-25 17:00:44
 tags:
+- Software
+- Tools
 ---
 因为需要用到的工具大多只有 `windows`平台的，我的代码环境只有少量运行在 `wsl2`上，大部分需要在 `windows`编译运行。为了维护c++用到的大量第三方库，我用[vcpkg](https://vcpkg.io/)和[cmake](https://cmake.org/)搭建出 c++ 的编译工具链。
 
