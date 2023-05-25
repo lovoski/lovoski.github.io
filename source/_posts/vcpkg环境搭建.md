@@ -1,7 +1,7 @@
 ---
 title: vcpkg环境搭建
 category:
-  - [Environement]
+  - [Software]
 comments: false
 date: 2023-05-25 17:00:44
 tags:
