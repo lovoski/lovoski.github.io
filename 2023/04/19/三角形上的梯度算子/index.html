@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lovoski">
+
+
+
+
+
+<title>三角形上的梯度算子 | Lovoski&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/icon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lovoski&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lovoski&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">三角形上的梯度算子</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lovoski</a><br>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 19, 2023&nbsp;</a><br>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Math/">Math</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>在上一篇介绍离散拉普拉斯算子的文章之后，补充一下三角形网格上的梯度算子的推导过程。</p>
+<ul>
+<li>接下来是具体的推导过程以下面的这张图为例说明：<br><img src="/2023/04/19/%E4%B8%89%E8%A7%92%E5%BD%A2%E4%B8%8A%E7%9A%84%E6%A2%AF%E5%BA%A6%E7%AE%97%E5%AD%90/gradient.png" alt="gradient"></li>
+<li>由于在每个顶点处都对应了一个标量值，用 $f(v_{i})$ 表示顶点 $v_{i}$ 处标量的值，不妨假设在每一个三角形的内部标量值的分布都是线性的（其实纹理坐标的映射也是这样，三角形的三个顶点映射到三个纹理坐标之后，内部直接采用线性插值决定颜色），可以采用重心坐标插值公式：<br>$$<br>f(u)&#x3D;f(v_{i})B_{i}(u)+f(v_{j})B_{j}(u)+f(v_{k})B_{k}(u)<br>$$</li>
+<li>来表示在三角形内部的每一个点 $u$ ，由于这个式子当中 $f(v_{i}),\ f(v_{j}),\ f(v_{k})$ 都是常量，求梯度的时候不发生改变，梯度的公式近似表示为<br>$$<br>\nabla f(u)&#x3D;f(v_{i})\nabla B_{i}(u)+f(v_{j})\nabla B_{j}(u)+f(v_{k})\nabla B_{k}(u)<br>$$</li>
+<li>接下来以上图中的第一个例子说明，对于插值函数 $B_{i}$ ，有 $B_{i}\in [0,1]$ ，并且当 $u&#x3D;v_{i}$ 时才有 $B_{i}(u)&#x3D;1$ ，当 $u&#x3D;v_{j}$ 或者 $u&#x3D;v_{k}$ 都有 $B_{i}&#x3D;0$ ，因为<strong>标量函数的梯度方向是使得标量函数变化最剧烈的方向</strong>，不难看出这个方向是垂直于边 $x_{j}x_{k}$ 的，在 $\Delta x_{i}x_{j}x_{k}$ 里面 $B_{i}$ 沿着 $\vec{n_{jk}}$ 的方向是线性地从 $1$ 变化到 $0$ （因为有了这个性质，所以之后计算散度的时候对这个函数求梯度会直接得到一个常量），于是有了下面的表达式：<br>$$<br>\nabla B_{i}&#x3D;\frac{||x_j-x_k||\vec{n_{jk}}}{2S_{\Delta ijk}}<br>$$</li>
+<li>上面的公式当中 $\vec{n_{jk}}$ 是边 $jk$ 的垂直方向，指向三角形的外部。</li>
+<li>把上式带入到第二个式子中可以得到：<br>$$<br>\nabla f(u)&#x3D;\sum_{i}\frac{||x_j-x_k||\vec{n_{jk}}f_i}{2S_{\Delta ijk}}<br>$$</li>
+<li>除了上面的表示方法，由于上面的三个插值函数满足性质：<br>$$<br>B_{i}+B_{j}+B_{k} &#x3D; 1<br>$$</li>
+<li>所以对等式两边同时求梯度（导数）可以得到：<br>$$<br>\nabla B_{i}+\nabla B_{j}+\nabla B_{k} &#x3D; 0<br>$$</li>
+<li>对于之前总结得到的公式可以进一步简化得到：<br>$$<br>\nabla f(u)&#x3D;(f_{j}-f_{i})\nabla B_{j}+(f_{k}-f_{i})\nabla B_{k}<br>$$</li>
+<li>上面的公式就是直接用在求<code>laplace-cotan</code>公式中的梯度形式。</li>
+</ul>
+
+        </div>
+
+        <!-- 读入保存在_config.yml里面的变量 -->
+        
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lovoski</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/math/"># math</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/04/19/%E6%B1%82%E8%84%8A%E7%BA%BF%E7%BB%93%E6%9E%84%E7%9A%84%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF%E6%80%9D%E8%B7%AF/">求脊线结构的一个错误思路</a>
+            
+            
+            <a class="next" rel="next" href="/2023/04/19/%E7%A6%BB%E6%95%A3%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%AE%97%E5%AD%90/">离散拉普拉斯算子</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lovoski | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

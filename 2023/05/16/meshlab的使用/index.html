@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lovoski">
+
+
+
+
+
+<title>meshlab的使用 | Lovoski&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/icon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lovoski&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lovoski&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">meshlab的使用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lovoski</a><br>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 16, 2023&nbsp;</a><br>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Software/">Software</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>写这一篇笔记主要是记录我在用<code>meshlab</code>处理模型中遇到的问题和相应的解决方案。</p>
+<h2 id="一些常用的快捷键"><a href="#一些常用的快捷键" class="headerlink" title="一些常用的快捷键"></a>一些常用的快捷键</h2><ul>
+<li><code>ctrl</code>+<code>f</code>：打开右上角的查询窗口，可以用来快捷输入要处理的操作</li>
+<li><code>esc</code>：可以在显示面的详细信息、选中状态下恢复自由移动视角，再次按下回到原来的状态</li>
+<li><code>鼠标中键拖动</code>：平移模型，用来更好观察模型</li>
+</ul>
+<h2 id="处理问题的常用方法"><a href="#处理问题的常用方法" class="headerlink" title="处理问题的常用方法"></a>处理问题的常用方法</h2><p>下面是我遇到过的问题和解决方案</p>
+<h3 id="得到的模型包含非流形边、非流形顶点"><a href="#得到的模型包含非流形边、非流形顶点" class="headerlink" title="得到的模型包含非流形边、非流形顶点"></a>得到的模型包含非流形边、非流形顶点</h3><p>引用下面对于非流形顶点的定义</p>
+<blockquote>
+<p>vertices that belong to <strong>wire and multiple face edges</strong>, <strong>isolated vertices</strong>, and vertices that belong to <strong>non-adjoining faces</strong>.</p>
+</blockquote>
+<p>在上面的描述中， <code>wire and multiple face edges</code> 指代的是一条与不少于两个面相关联的边，一般也称为<strong>非流形边</strong>，流形中的边至多只会和两个面关联（这两个面共享的边）。这种边的顶点属于非流形顶点。</p>
+<p>除了上面这种顶点，如果两个面除了这个顶点之外，没有别的共享顶点，这个唯一的公共顶点也是非流形顶点。其实孤立的顶点也属于非流形顶点，也就是 <code>isolated vertices</code> 。</p>
+<p><code>meshlab</code> 中可以在查询窗口里面输入 <code>remove</code> 。出现的下拉选择框如下图:</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig1.png" alt="fig1"></p>
+<ul>
+<li><code>remove unreferenced vertices</code> 可以去除孤立点。</li>
+<li><code>remove duplicate vertices</code> 可以合并位置完全相同的顶点，这一个选项除了有时候能除去非流形顶点，也可以用来合并一些有相同顶点的面。这在很难判断一些面的相邻关系的时候很有用，因为这是可以把每个面的所有顶点全部都输出，再用这个选项把重复的顶点去掉，得到一个由多个面组成的曲面。</li>
+<li><code>remove duplicate faces</code> 类似上面除去位置完全相同的顶点，这可以合并位置完全相同的面。</li>
+</ul>
+<p>除了上面的办法，还可以输入 <code>manifold</code> 找到下面的方法。有的时候处理过一次之后，导出保存，重新处理一次可能也会有效果。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig2.png" alt="fig2"></p>
+<h3 id="需要得到选中区域中所有面的-index"><a href="#需要得到选中区域中所有面的-index" class="headerlink" title="需要得到选中区域中所有面的 index"></a>需要得到选中区域中所有面的 <code>index</code></h3><p>如果只需要得到获得一个面的信息，可以点击顶部 <code>dock</code> 中的黄色图标获得一个面的具体信息。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig3.png" alt="fig3"></p>
+<p>但是这样显示的效果有时很难看清楚。而且没办法同时显示很多面的信息，所以有下面的办法。</p>
+<ol>
+<li>首先通过选择工具选择一些面（类似于上图中的红色区域）</li>
+<li>在搜索框中输入 <code>per face quality function</code> ，在出现的对话框中填入 <code>fsel * fi</code>：</li>
+</ol>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig5.png" alt="fig5"></p>
+<ol start="3">
+<li>上面的公式中 <code>fsel</code> 对于被选中的面是 <code>1</code> ，没选中的面为 <code>0</code> ， <code>fi</code> 是一个面的 <code>index</code> 。</li>
+<li>接下来将处理过的模型导出为 <code>.ply</code> 文本格式，不要选择二进制编码。</li>
+</ol>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig6.png" alt="fig6"></p>
+<ol start="5">
+<li>得到 <code>.ply</code> 模型文件之后，可以用下面的 <code>python</code> 脚本把所有选中的面写到一个单独的文件里面。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv</span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> exit</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(argv) &lt; <span class="number">2</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;usage:\n[script] [ply_file]&#x27;</span>)</span><br><span class="line">  exit(-<span class="number">1</span>)</span><br><span class="line">fids = <span class="built_in">open</span>(<span class="string">&#x27;fids.txt&#x27;</span>, <span class="string">&#x27;w+&#x27;</span>)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(argv[<span class="number">1</span>], <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">  <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">    numbers = line.split()</span><br><span class="line">    last_number = numbers[-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(numbers) &lt; <span class="number">5</span>:</span><br><span class="line">      <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> last_number.isdigit():</span><br><span class="line">      <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">if</span> last_number != <span class="string">&#x27;0&#x27;</span>:</span><br><span class="line">      fids.write(last_number+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">fids.close()</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="通过已有的-index-选中顶点或者面"><a href="#通过已有的-index-选中顶点或者面" class="headerlink" title="通过已有的 index 选中顶点或者面"></a>通过已有的 <code>index</code> 选中顶点或者面</h3><p>最常用的方法是在搜索框里面输入 <code>conditional selection</code> 可以找到选择点和选择面的对话框，可以输入 <code>bool表达式</code>。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig7.png" alt="fig7"></p>
+<p>一般来说说会手动生成符合这种格式的字符串，可以考虑下面的 <code>python</code> 脚本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv</span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> exit</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(argv) &lt; <span class="number">2</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;usage:\n[script] [fids_file]&#x27;</span>)</span><br><span class="line">  exit(-<span class="number">1</span>)</span><br><span class="line">bool_expression = <span class="built_in">open</span>(<span class="string">&#x27;bool_expression.txt&#x27;</span>, <span class="string">&#x27;w+&#x27;</span>)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(argv[<span class="number">1</span>], <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">  <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">    bool_expression.write(<span class="string">&#x27;fid==&#x27;</span>+line+<span class="string">&#x27;||&#x27;</span>)</span><br><span class="line">bool_expression.close()</span><br></pre></td></tr></table></figure>
+
+<h3 id="多边形模型保存为三角形模型"><a href="#多边形模型保存为三角形模型" class="headerlink" title="多边形模型保存为三角形模型"></a>多边形模型保存为三角形模型</h3><p>需要在导出模型保存的时候取消 <code>polygon</code> 的选择（<code>meshlab</code> 里面对模型做的操作不会直接影响本地文件，需要 <code>export</code> 才真的保存了）。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/save_panel.png" alt="fig:save"></p>
+<h3 id="从高面数模型获取低面数模型"><a href="#从高面数模型获取低面数模型" class="headerlink" title="从高面数模型获取低面数模型"></a>从高面数模型获取低面数模型</h3><p>如果算法的表现在低面数模型上效果更明显，可以找一个高面数模型转化成低面数的，在搜索框输入 <code>simplification</code> ，可以得到下面的几个结果。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig9.png" alt="fig8"></p>
+<p>可以用上图中蓝色选中项转化现在的模型，如果现在的模型有纹理坐标，下面的 <code>(with texture)</code> 选项还可以一定程度上保留纹理坐标。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/compare.png" alt="fig:compare"></p>
+<h3 id="从低面数模型获取高面数模型"><a href="#从低面数模型获取高面数模型" class="headerlink" title="从低面数模型获取高面数模型"></a>从低面数模型获取高面数模型</h3><p>可以直接在搜索框输入 <code>subdivision</code> 。</p>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/fig10.png" alt="fig10"></p>
+<ol>
+<li>中点细分：<br>按照三角形边的中点把一个三角形分成4个小三角形，效果见下图。</li>
+</ol>
+<p><img src="/2023/05/16/meshlab%E7%9A%84%E4%BD%BF%E7%94%A8/subdivision_midpoint.png" alt="fig:subdivision_midpoint"></p>
+<p>不过如果只选中一个三角形，与这个三角形面相邻的三个三角形就会变成多边形，虽然 <code>.obj</code> 文件格式里面可以用 <code>f id0 id1 ... idn</code> 的格式表示多边形面，不要求所有的面都是三角形，但是 <code>meshlab</code> 里面用中点细分需要选中至少四个面，让选中区域都是三角形。</p>
+
+        </div>
+
+        <!-- 读入保存在_config.yml里面的变量 -->
+        
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lovoski</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Software/"># Software</a>
+                    
+                        <a href="/tags/Tools/"># Tools</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/05/25/vcpkg%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">vcpkg环境搭建</a>
+            
+            
+            <a class="next" rel="next" href="/2023/04/23/%E7%9F%A2%E9%87%8F%E7%BB%98%E5%9B%BE%E8%BD%AF%E4%BB%B6-IPE/">矢量绘图软件 IPE</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lovoski | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
