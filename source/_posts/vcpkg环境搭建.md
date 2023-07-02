@@ -68,7 +68,17 @@ vcpkg 自己提供了在项目的根目录下编写 `vcpkg.json` 的方式管理
 find_package(libigl 2.3 CONFIG REQUIRED)
 ```
 
-如果 vcpkg 中的版本不对， cmake 会直接报错。可以手动下载编译需要的包，然后在 vscode 的搜索栏里输入 `cmaka:cache` 。可以找到修改 `CMakeCache.txt` 的 UI 界面，可以在这里手动指定安装的库里面 `<libraryName>-config.cmake` 或者 `<libraryNmae>Config.cmake` 文件的位置，一般在用 cmake 安装了这个库之后的 `shared` 文件夹下（有关这个库的用法一般会用 `usage` 命名放在这个文件夹下面）。
+如果 vcpkg 中的版本不对， cmake 会直接报错。可以手动下载编译需要的包，然后在 vscode 的搜索栏里输入 `cmake:cache` 。可以找到修改 `CMakeCache.txt` 的 UI 界面，可以在这里手动指定安装的库里面 `<libraryName>-config.cmake` 或者 `<libraryNmae>Config.cmake` 文件的位置，一般在用 cmake 安装了这个库之后的 `shared` 文件夹下（有关这个库的用法一般会用 `usage` 命名放在这个文件夹下面）。
+
+对于上面库模块名称的问题，可以用:
+```cmake
+if (TARGET igl::core)
+  message("module igl::core exists")
+else ()
+  message("module igl::core doesn't exists")
+endif ()
+```
+判断一个模块是否存在，如果存在则链接这个模块，不存在则换一个模块名称尝试。
 
 ![img](vcpkg环境搭建/vscode_cmake_tools_cache_editor.png)
 
@@ -88,11 +98,11 @@ find_package(libigl 2.3 CONFIG REQUIRED)
 ```json
   {
       "cmake.configureSettings": {
-          "CMAKE_TOOLCHAIN_FILE": "...\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "...\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
       },
       "cmake.debugConfig": {
-          "args": ["a", "b", "c"],
-  	  "console": "integratedTerminal"
+        "args": ["a", "b", "c"],
+        "console": "integratedTerminal"
       }
   }
 ```
