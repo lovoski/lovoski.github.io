@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lovoski">
+
+
+
+
+
+<title>blender学习和使用（一） | Lovoski&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/icon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lovoski&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lovoski&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">blender学习和使用（一）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lovoski</a><br>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">七月 4, 2023&nbsp;</a><br>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Software/">Software</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>因为在论文中有很多想要实现的效果图、示意图，大部分这样的土豆需要用3D渲染，但是如果手动去生成这些模型非常费时费力，如果有一些简单的建模能力，作图会方便非常多。</p>
+<p>在这之前我已经有了 <code>3DS MAX</code> ，但是这个软件感觉非常笨重，而且需要教育账号才能激活，所以我选择了 <code>blender</code> ，我开始学习的版本是 <code>blender3.5</code>。</p>
+<p>这是我开始学习的教程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/217014302">Blendergo的个人空间_哔哩哔哩_bilibili</a></p>
+<h2 id="学习笔记"><a href="#学习笔记" class="headerlink" title="学习笔记"></a><strong>学习笔记</strong></h2><h3 id="基本的快捷键操作"><a href="#基本的快捷键操作" class="headerlink" title="基本的快捷键操作"></a>基本的<strong>快捷键</strong>操作</h3><p><code>T</code> ：在物体模式隐藏左侧的快捷工具栏，方便渲染窗口观察，再按一次可以显示工具栏。</p>
+<p><code>tab</code> ：进入编辑模式，可以按<code>1</code>,<code>2</code>,<code>3</code>分别选择<code>点</code>,<code>线</code>,<code>面</code>做修改，这里面比较常用的包括：</p>
+<ol>
+<li>挤出工具 <code>E</code> ：<strong>可以把选中的<code>点</code>,<code>线</code>,<code>面</code>“挤出”</strong>，对于一条边来说，可以看成这条变向外延伸和原来的边形成一个平面；对于一个面来说，可以理解成这个面向外拓展和原来的面形成一个柱体。要注意的是，这个工具不仅仅能向外“挤出”，也可以向内“挤出”，制造出“凹陷”的效果。为了完全实现“凹陷”的效果，往往还要利用内插面工具 <code>I</code>。</li>
+<li>衰减编辑：按 <code>o</code> 可以开启衰减编辑，配合移动工具 <code>g</code> 可以做到类似于<strong>柔性编辑</strong>的效果，这种编辑的影响范围可以通过滚轮调整。</li>
+<li><code>ctrl</code>+<code>B</code>：添加快速为选中的<code>点</code>,<code>线</code>,<code>面</code>做倒角处理，到家过程中用鼠标移动控制倒角的大小，用鼠标滚轮控制倒角的段数。由于编辑模式直接作用于原来的模型，之后不需要在手动应用修改器。</li>
+<li><code>A</code>：全部选择，基于当前是选择<code>点</code>,<code>线</code>,<code>面</code>中的哪一种</li>
+<li><code>P</code>：分离模型，可以选择分离当前选中的部分模型。</li>
+<li><code>F</code>：填补空洞，如果用环形选择选中一圈边，可以用这种方式填补环形围成的空洞。</li>
+</ol>
+<p><code>shift</code>+<code>A</code>：在<strong>游标的位置处创建物体</strong>。这个物体可以是 mesh、摄像机、灯光等等。</p>
+<p><code>ctrl</code>+<code>A</code>：在选中一个修改器的时候把这个<strong>修改器应用到模型上面</strong>，在给一个模型添加修改器之后模型默认是没有应用这个修改器的。如果一个模型有多个修改器没有应用，按照不同的顺序应用修改器可能会让模型产生的效果和展示的不一样。还有一个情况是，当通过快捷键 <code>rr</code> 对一个模型做了<strong>自由旋转</strong>，会发现这个<strong>模型的坐标轴现在是歪的</strong>，选中这个模型，按下<code>ctrl</code>+<code>a</code>可以看到 <code>旋转</code> 选项，点击应用旋转，坐标轴就归正了。类似地可以处理缩放造成的问题。</p>
+<p><code>ctrl</code>+<code>1</code>&#x2F;<code>2</code>&#x2F;<code>3</code>：在默认的 <code>object mode</code> 下选中一个模型，可以<strong>快速细分</strong>这个模型（其实是快速创建了修改器，之后要手动应用修改器）。第二个数字代表了细分的程度。</p>
+<p><code>m</code> ：在 <code>object mode</code> 下将选中的<strong>模型分配到某一个组中</strong>，这个组可以是已经存在的组，也可以新创建一个组。合理分组有利于项目管理。</p>
+<ol>
+<li>一个常见的问题是，我怎么选取一个组里面所有的物体：可以选中一个模型，按下 <code>shift</code>+<code>G</code> ，在弹出的下拉框里选择 <code>collection</code> ，然后可以看到这个物体所在的所有组，点击即可选中这个组里面所有的模型。</li>
+</ol>
+<p><code>ctrl</code>+<code>L</code> ：用<code>shift</code>选中多个模型之后，按下这组快捷键，会出现<strong>“链接”选项框</strong>，这是可以把最后一个选中的模型上的材质通过<code>链接材质</code>选项复制到所有选中的模型上面。</p>
+<p><code>alt</code>+<code>Z</code>：**切换模型的显示模式为<code>透视模式</code>**，模型的表面变成半透明的，有利于在编辑模式下观察选中的元素。一般情况下，编辑模式只能选中看见一侧的<code>点</code>,<code>线</code>,<code>面</code>，进入透视模式之后能非常方便的三种背面的<code>点</code>,<code>线</code>,<code>面</code>。</p>
+<p><code>shift</code>+<code>S</code>：打开<strong>游标的控制选项</strong>，比较常用的是这里面把游标回归到世界原点的选项。这个选项中也可以让游标移动到选择的物体的几何中心，例如一个圆的圆心。</p>
+<p><code>鼠标右键</code>+<code>设置原点</code>：一般的几何物体原点在几何中心，文字类型的东西中心在左下角，通过这个设置可以把文字的原点设置成文字的中心位置。</p>
+<p><code>ctrl</code>+<code>R</code> ：编辑模式下的<strong>环形切割</strong>，可以在鼠标光标处产生沿着模型表面的环形切割线，通过鼠标拖动可以改变切割的位置，鼠标滚轮可以调整平行的环形切割的次数，按下<code>esc</code>可以退出环形切割，看到切割后的结果。</p>
+<p><code>alt</code>+<code>鼠标左键单击</code>：<strong>环形选中</strong>，可以选中绕着当前模型表面的一圈<code>点</code>,<code>线</code>,<code>面</code>。结合 <code>S</code> 缩放可以非常灵活地调整模型的形状。</p>
+<p><code>alt</code>+<code>D</code>：<strong>关联复制</strong>，和普通的复制 <code>shift</code>+<code>D</code>区别在于，如果原来的模型调整了外观，复之后的模型也会相应调整。<strong>非常适用于对称的物品</strong>。</p>
+<h3 id="建模常用的技巧"><a href="#建模常用的技巧" class="headerlink" title="建模常用的技巧"></a><strong>建模常用的技巧</strong></h3><h3 id="从一个立方体开始把形状“拉”出来"><a href="#从一个立方体开始把形状“拉”出来" class="headerlink" title="从一个立方体开始把形状“拉”出来"></a><strong>从一个立方体开始把形状“拉”出来</strong></h3><p>主要用到下面的工具：</p>
+<ol>
+<li>表面细分</li>
+<li>环形切割</li>
+<li>编辑模式下的位移，缩放</li>
+</ol>
+<p>大致过程是：创建一个立方体之后，先按照粗略的形状拉伸立方体，然后用 <code>ctrl</code>+<code>1/2/3</code>快速<strong>给立方体加上一个表面细分修改器</strong>，进入到编辑模式，打开透显模式，可以看到细分之后的模型和细分之前的模型，用环形切割让外层模型多出一些定位点，然后<strong>用位移、缩放外面的定位点</strong>的方式修改里面真正的模型，最后应用修改器。</p>
+<h3 id="将一个模型按照自定义方式切割"><a href="#将一个模型按照自定义方式切割" class="headerlink" title="将一个模型按照自定义方式切割"></a><strong>将一个模型按照自定义方式切割</strong></h3><p>主要用到下面的工具：</p>
+<ol>
+<li>编辑模式下的 <code>bisect</code></li>
+<li>编辑模式下的环形选择</li>
+<li>选择工具 <code>select loops</code>&gt;<code>select loop inner-region</code></li>
+<li>分割工具 <code>P</code> ，按照选择分割</li>
+<li>填充工具 <code>F</code>，填充切割产生的空洞</li>
+</ol>
+<p>大致的过程是：选中想要切割的物体，进入编辑模式，<code>A</code> 全选，然后用侧边栏的 <code>bisect</code>切割工具画出想要切割的线条，用上面提到的选择工具选择切割产生的一个部分，填补空洞。</p>
+<h3 id="从选中的边创建曲线"><a href="#从选中的边创建曲线" class="headerlink" title="从选中的边创建曲线"></a><strong>从选中的边创建曲线</strong></h3><p>用到了拓展 <code>edge to curve</code>，链接是<a target="_blank" rel="noopener" href="https://github.com/Stromberg90/Scripts/blob/master/Blender/Edge_To_Curve.py">Edge to Curve · GitHub</a> ，下载文件然后安装即可。用法是选中一些边，然后用 <code>F3</code> 呼出搜索栏，输入 <code>edge to curve</code>，确认后可以用鼠标移动直接改变曲线显示的粗细。</p>
+<p>通过这个工具，结合柔性编辑，能比较轻松创建出下图的效果：</p>
+<img src="blender学习和使用（一）/flip_surface_demo.png" alt="fig" style="zoom:80%;" />
+
+<p>上图中灰色的线和黑色的线是通过环形选择工具 <code>alt</code> 选中后，用上面提到的拓展创建曲线，调整曲线的材质和粗细，渲染得到的。</p>
+<h3 id="常用的修改器"><a href="#常用的修改器" class="headerlink" title="常用的修改器"></a><strong>常用的修改器</strong></h3><ol>
+<li>倒角修改器（bevel）：可以给选中的模型整体，或者模型上选中的线、面添加倒角。可以调整倒角的段数，每一段倒角的长度。也可以自定义倒角的形式来自动地创建阶梯形状的倒角。</li>
+<li>阵列修改器（array）：可以按照特定的间隔产生选中物体的副本，能够制定产生多少个副本，副本之间的间隔是多少。</li>
+</ol>
+<h3 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h3><h3 id="模型的着色有问题，本应是平面处出现褶皱"><a href="#模型的着色有问题，本应是平面处出现褶皱" class="headerlink" title="模型的着色有问题，本应是平面处出现褶皱"></a>模型的着色有问题，<strong>本应是平面处出现褶皱</strong></h3><ol>
+<li>可能是在用到了倒角修改器之后产生的，可以在道教修改器的“着色”选项里面找到<code>硬化法线（harden normal）</code> 对效果进行修正。</li>
+<li>也可能是 <code>blender</code>对模型的自动着色有问题，在出现问题的模型的<code>模型数据属性</code>里面的<code>法线</code>找到<code>自动平滑（auto smooth）</code>选项，选中该选项，也能一定程度修正着色问题</li>
+</ol>
+
+        </div>
+
+        <!-- 读入保存在_config.yml里面的变量 -->
+        
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lovoski</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Software/"># Software</a>
+                    
+                        <a href="/tags/Tools/"># Tools</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/05/25/vcpkg%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">vcpkg环境搭建</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lovoski | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
