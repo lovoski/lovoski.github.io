@@ -299,8 +299,7 @@
 <p>大致的过程是：选中想要切割的物体，进入编辑模式，<code>A</code> 全选，然后用侧边栏的 <code>bisect</code>切割工具画出想要切割的线条，用上面提到的选择工具选择切割产生的一个部分，填补空洞。</p>
 <h3 id="从选中的边创建曲线"><a href="#从选中的边创建曲线" class="headerlink" title="从选中的边创建曲线"></a><strong>从选中的边创建曲线</strong></h3><p>用到了拓展 <code>edge to curve</code>，链接是<a target="_blank" rel="noopener" href="https://github.com/Stromberg90/Scripts/blob/master/Blender/Edge_To_Curve.py">Edge to Curve · GitHub</a> ，下载文件然后安装即可。用法是选中一些边，然后用 <code>F3</code> 呼出搜索栏，输入 <code>edge to curve</code>，确认后可以用鼠标移动直接改变曲线显示的粗细。</p>
 <p>通过这个工具，结合柔性编辑，能比较轻松创建出下图的效果：</p>
-<img src="blender学习和使用（一）/flip_surface_demo.png" alt="fig" style="zoom:80%;" />
-
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/flip_surface_demo.png" alt="fig"></p>
 <p>上图中灰色的线和黑色的线是通过环形选择工具 <code>alt</code> 选中后，用上面提到的拓展创建曲线，调整曲线的材质和粗细，渲染得到的。</p>
 <h3 id="常用的修改器"><a href="#常用的修改器" class="headerlink" title="常用的修改器"></a><strong>常用的修改器</strong></h3><ol>
 <li>倒角修改器（bevel）：可以给选中的模型整体，或者模型上选中的线、面添加倒角。可以调整倒角的段数，每一段倒角的长度。也可以自定义倒角的形式来自动地创建阶梯形状的倒角。</li>
