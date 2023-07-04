@@ -80,7 +80,7 @@ tags:
 
 通过这个工具，结合柔性编辑，能比较轻松创建出下图的效果：
 
-<img src="C:\Code\lovoski.github.io\source\_drafts\blender的学习和使用（一）\flip_surface_demo.png" alt="fig" style="zoom:80%;" />
+<img src="blender的学习和使用（一）/flip_surface_demo.png" alt="fig" style="zoom:80%;" />
 
 上图中灰色的线和黑色的线是通过环形选择工具 `alt` 选中后，用上面提到的拓展创建曲线，调整曲线的材质和粗细，渲染得到的。
 
