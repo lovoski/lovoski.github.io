@@ -1,7 +1,12 @@
 ---
 title: blender的学习和使用（二）
+category:
+  - []
+comments: false
+date: 2023-07-06 09:37:34
 tags:
 ---
+
 
 ## **写在前面**
 
