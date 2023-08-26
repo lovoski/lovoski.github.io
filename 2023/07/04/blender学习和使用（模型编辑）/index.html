@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lovoski">
+
+
+
+
+
+<title>blender学习和使用（模型编辑） | Lovoski&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/icon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lovoski&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lovoski&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">blender学习和使用（模型编辑）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lovoski</a><br>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">七月 4, 2023&nbsp;</a><br>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Software/">Software</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a><strong>写在前面</strong></h2><p>因为在论文中有很多想要实现的效果图、示意图，大部分这样的图都需要用3D渲染，但是如果手动去生成这些模型非常费时费力，如果有一些简单的建模能力，作图会方便非常多。</p>
+<p>在这之前我已经有了 <code>3DS MAX</code> ，但是这个软件感觉非常笨重，而且需要教育账号才能激活，所以我选择了 <code>blender</code> ，我开始学习的版本是 <code>blender3.6</code>。</p>
+<p>这是我开始学习的教程：<a target="_blank" rel="noopener" href="https://space.bilibili.com/217014302">Blendergo的个人空间_哔哩哔哩_bilibili</a></p>
+<p>这一系列的教程会覆盖一些包括简单的<strong>硬表面建模</strong>，<strong>动画制作</strong>，<strong>物理模拟</strong>和<strong>骨骼绑定</strong>之类的内容。类似于 <strong>UV 展开</strong>，<strong>纹理制作</strong>这样的小方面会穿插其中介绍。但是论文中最为重要的<strong>模型编辑方法</strong>，<strong>动画制作</strong>和<strong>渲染的灯光布置</strong>是我要关注的重点。</p>
+<h2 id="学习笔记"><a href="#学习笔记" class="headerlink" title="学习笔记"></a><strong>学习笔记</strong></h2><p>为了确保整个记录的过程简洁高效，以下将会直接列举出常常需要实现的效果和实现的具体方法，之后如果学习到更优秀的方法将会继续更新。</p>
+<h3 id="让模型的扭曲形变呈现地更平滑自然"><a href="#让模型的扭曲形变呈现地更平滑自然" class="headerlink" title="让模型的扭曲形变呈现地更平滑自然"></a>让模型的扭曲形变呈现地更平滑自然</h3><p>这里的平滑自然指的是下图中的效果：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/torus_propotional_editing.gif" alt="torus_propotional_editing"></p>
+<p>上面的视频是把一个 torus 沿着一个环切开之后，并用柔性编辑移动剪开的一侧得到的效果。</p>
+<p>除了上面对于一个完整的 mesh 的操作，也会有对于平面，曲线的类似操作，都是通过编辑模式下的柔性编辑(propotional editting)实现的，柔性编辑具体的菜单样式如下：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/propotional_editting_panel" alt="image-20230825205037703"></p>
+<p>通过编辑模式下的快捷键 <code>O</code> 开启之后，可以用鼠标滚轮调整柔性编辑影响的区域大小，在上面的选单中也可以控制柔性编辑是如何影响一定大小区域内模型的扭曲的。</p>
+<p>同时，选项 <code>connected only</code> 可以让柔性编辑影响的区域只作用于区域范围内和选中元素直接相连通的其他元素，如果不开启这个选项，是不能显示出之前图中的切口的。</p>
+<p>另外值得说的是，上面视频中的效果如果要变成可渲染的动画，需要用到 <code>shape keys</code> 这个属性的关键帧，具体的方法会在后面一篇总结动画制作的笔记中提及。</p>
+<h3 id="沿着选中的边把模型切割开来"><a href="#沿着选中的边把模型切割开来" class="headerlink" title="沿着选中的边把模型切割开来"></a>沿着选中的边把模型切割开来</h3><p>要实现的效果相当于让原本相连的两个面现在分离而不只是单纯在特定的位置添加分割线，这种才做改变了原本模型的拓扑结构。实现的效果可以展示为：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/torus_cut_change_topology.gif" alt="torus_cut_change_topology"></p>
+<p>上面的视频是将一个原本封闭的 torus 沿着一个环切开，出现两个切口。首先要在编辑模式下通过环形选择 <code>alt+&lt;left click&gt;</code> 选择出想要切割的环形边（只要是选中的边都可以，通常是环形边），用 <code>alt+M</code> 快捷键打开 <code>mesh&gt;split</code> 菜单，在三个选项中选择第二个“用选中的边将分割开来”。此时模型的拓扑结构已经改变，按照所想要的地方切割开来了。</p>
+<p>除了非常常用的环形选择 <code>alt+&lt;left click&gt;</code> （这种选择往往也可以适用于非环形的模型边缘），另一种常用的选择是最短路选择 <code>ctrl+&lt;left click&gt;</code>，这种选择会试着用最短路连接选中的第一个和第二个元素，适用于点线面。</p>
+<h3 id="按照各种方式为模型添加分割线"><a href="#按照各种方式为模型添加分割线" class="headerlink" title="按照各种方式为模型添加分割线"></a>按照各种方式为模型添加分割线</h3><p>这里的分割线就只是在指定的位置添加了布线，但是没有改变模型的拓扑结构，和上面的一条不同。</p>
+<p>常用的工具是编辑模式下的手术刀工具 <code>K</code> ，不过要注意的是，手术刀工具可以追加非常多的参数，实现很奇妙的功能，如下：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/knife_tool.gif" alt="knife_tool"></p>
+<p>在上面展示手术刀工具的时候，用到了两个追加的参数 <code>A</code> 和 <code>C</code> ，<code>A</code> 能够让切割线沿着平行于最标轴的方向切割（或者斜的某个方向），<code>C</code> 可以沿着当前视角下的切割线把整个模型”切透“。</p>
+<p>上面这样”切透“的实现，还有一个专门的工具叫做 <code>knife project</code> ，可以沿着某一条选定的曲线把模型”切透“，可以直接在 blender 的工具栏里面搜索然后应用。</p>
+<h3 id="常用的突出显示模型特定边的方法"><a href="#常用的突出显示模型特定边的方法" class="headerlink" title="常用的突出显示模型特定边的方法"></a>常用的突出显示模型特定边的方法</h3><p>有的时候我们希望给模型的一些边或者所有边给特定的材质，好让这些边看起来更突出，比如下面的效果：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/colored_edges" alt="image-20230825213348377"></p>
+<p>在这个图中通过把红色的边选中，<code>shift+D</code> 复制并 <code>P</code> 分离，转化为曲线，再给曲线指定显示的厚度，就可以为这条曲线单独赋予红色材质。黑色的边是把整个模型复制一份后，添加线框修改器(wireframe modifier)，调整线框的粗细，赋予黑色的材质之后得到的。</p>
+<p>当然，因为 blender 允许在编辑模式下为一个模型的不同面赋予不同的材质，如果要突出显示一些面，可以简单地选中想要赋予单独材质的面添加材质。线没办法直接赋予材质，只有具有厚度的曲线或者线框化之后的模型才能赋予材质。</p>
+<h3 id="开启按按面着色之后模型的着色有问题"><a href="#开启按按面着色之后模型的着色有问题" class="headerlink" title="开启按按面着色之后模型的着色有问题"></a>开启按按面着色之后模型的着色有问题</h3><p>如果希望渲染一些有棱有角的几何体，可能会开启按面着色。如果有的面理应是一个平面，但是看起来完全不是这样，试试下面的办法。</p>
+<ol>
+<li>可能是在用到了倒角修改器之后产生的，可以在道教修改器的“着色”选项里面找到<code>硬化法线（harden normal）</code> 对效果进行修正。</li>
+<li>也可能是 <code>blender</code>对模型的自动着色有问题，在出现问题的模型的<code>模型数据属性</code>里面的<code>法线</code>找到<code>自动平滑（auto smooth）</code>选项，选中该选项，也能一定程度修正着色问题</li>
+</ol>
+
+        </div>
+
+        <!-- 读入保存在_config.yml里面的变量 -->
+        
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lovoski</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Tools/"># Tools</a>
+                    
+                        <a href="/tags/Software/"># Software</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/07/06/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C%EF%BC%89/">blender学习和使用（动画制作）</a>
+            
+            
+            <a class="next" rel="next" href="/2023/05/25/vcpkg%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">vcpkg环境搭建</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lovoski | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

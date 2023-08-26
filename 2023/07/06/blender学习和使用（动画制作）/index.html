@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lovoski">
+
+
+
+
+
+<title>blender学习和使用（动画制作） | Lovoski&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/icon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lovoski&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lovoski&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">blender学习和使用（动画制作）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lovoski</a><br>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">七月 6, 2023&nbsp;</a><br>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Software/">Software</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a><strong>写在前面</strong></h2><p>上一篇笔记整理了<strong>模型编辑</strong>的常用工具，这一篇主要讲如何<strong>制作动画</strong>，特别是用于演示的动画。</p>
+<h2 id="学习笔记"><a href="#学习笔记" class="headerlink" title="学习笔记"></a><strong>学习笔记</strong></h2><h3 id="动画中的关键帧"><a href="#动画中的关键帧" class="headerlink" title="动画中的关键帧"></a>动画中的关键帧</h3><p>要了解 blender 是如何实现动画的，首先要了解关键帧的概念。blender 可以记录下模型在某一帧下面的很多属性，包括位置，旋转角度，缩放大小，形状，刚性，重量等等。在右下方的属性栏目里面，每一个能够被关键帧记录的属性在右侧都会有一个这样的标志：</p>
+<p><img src="/2023/07/06/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C%EF%BC%89/key_frame_properties" alt="image-20230825215333533"></p>
+<p>右侧会有一个白色的小点。在底部的时间轴可以选择当前所在的帧，在上图的特定属性处按下快捷键 <code>I</code> 可以在时间轴的当前帧记录下这个属性的值，之后在底部的时间轴改变当前所在的帧，重新记录同一个属性改变后的值，就可以在这两帧之间实现动画效果。</p>
+<p>并且，通过把底部时间栏拉起来，可以改变关键帧到关键帧之间的过渡方式，可以是线性过渡，也可以自定义非线性的过渡方式。</p>
+<h3 id="卷轴滚动的效果"><a href="#卷轴滚动的效果" class="headerlink" title="卷轴滚动的效果"></a>卷轴滚动的效果</h3><p>这个动画的效果如下：</p>
+<p><img src="/2023/07/06/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C%EF%BC%89/rolling_animation.gif" alt="rolling_animation"></p>
+<p>实现这个动画效果的核心是曲线修改器(curve modifier)。blender 中允许一一条曲线为参考，扭曲形变一个模型，如果我们首先创建一个扭曲的曲线，然后用曲线修改器把这个模型和曲线绑定，移动曲线的时候，就会实时作用于模型的形状。为曲线的位置添加关键帧，再在渲染的时候隐藏曲线，就可以实现卷轴滚动的效果。</p>
+<p>当然，谈及曲线修改器的应用，就远远不止实现这个动画效果。我们可以扭曲曲线来实现模型的扭曲，让原本平直的模型按照曲线的形状弯曲，更多的应用场景在需要的时候再记录。</p>
+<h3 id="模型展开的效果"><a href="#模型展开的效果" class="headerlink" title="模型展开的效果"></a>模型展开的效果</h3><p>这个动画效果如下：</p>
+<p><img src="/2023/07/06/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C%EF%BC%89/unfolding_animation.gif" alt="unfolding_animation"></p>
+<p>这个动画效果在之前的<strong>模型编辑</strong>笔记部分提到过，核心是利用 blender 中的 shape keys 属性关键帧。</p>
+<p>在右下角的物体数据属性(object data properties)中，可以看到 shape keys 的设置选项。</p>
+<p><img src="/2023/07/06/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C%EF%BC%89/shape_keys_menu" alt="image-20230826201306973"></p>
+<p>在这个选项中可以添加 shape keys ，添加并选中一个 shape key 之后，进入编辑模式，我们可以对物体的点，线，面作各种变换，调整到想要的效果之后，退出编辑模式。</p>
+<p>接下来可以通过调整之前选中的 shape key 下方的 value 数值来在原本的模型和变化之后的模型之间变化，注意到这个 value 是可以作为关键帧属性的，通过在时间轴删记录两个 value 值不同的关键帧，就可以实现想要的动画效果。</p>
+<p>不过 shape keys 本身的应用也远远不止这个，似乎在和骨骼联系之后，可以给人物模型做出非常复杂的表情动画，但目前没有遇到适用的场景，有待将来学习。</p>
+
+        </div>
+
+        <!-- 读入保存在_config.yml里面的变量 -->
+        
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lovoski</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Tools/"># Tools</a>
+                    
+                        <a href="/tags/Software/"># Software</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/">blender学习和使用（模型编辑）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lovoski | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
