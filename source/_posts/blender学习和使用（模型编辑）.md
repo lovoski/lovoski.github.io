@@ -28,13 +28,13 @@ tags:
 
 这里的平滑自然指的是下图中的效果：
 
-![torus_propotional_editing](C:\Code\lovoski.github.io\source\_posts\blender学习和使用（模型编辑）\torus_propotional_editing.gif)
+![torus_propotional_editing](blender学习和使用（模型编辑）/torus_propotional_editing.gif)
 
 上面的视频是把一个 torus 沿着一个环切开之后，并用柔性编辑移动剪开的一侧得到的效果。
 
 除了上面对于一个完整的 mesh 的操作，也会有对于平面，曲线的类似操作，都是通过编辑模式下的柔性编辑(propotional editting)实现的，柔性编辑具体的菜单样式如下：
 
-![image-20230825205037703](C:\Code\lovoski.github.io\source\_posts\blender学习和使用（模型编辑）\propotional_editting_panel)
+![image-20230825205037703](blender学习和使用（模型编辑）/propotional_editting_panel)
 
 通过编辑模式下的快捷键 `O` 开启之后，可以用鼠标滚轮调整柔性编辑影响的区域大小，在上面的选单中也可以控制柔性编辑是如何影响一定大小区域内模型的扭曲的。
 
@@ -46,7 +46,7 @@ tags:
 
 要实现的效果相当于让原本相连的两个面现在分离而不只是单纯在特定的位置添加分割线，这种才做改变了原本模型的拓扑结构。实现的效果可以展示为：
 
-![torus_cut_change_topology](C:\Code\lovoski.github.io\source\_posts\blender学习和使用（模型编辑）\torus_cut_change_topology.gif)
+![torus_cut_change_topology](blender学习和使用（模型编辑）/torus_cut_change_topology.gif)
 
 上面的视频是将一个原本封闭的 torus 沿着一个环切开，出现两个切口。首先要在编辑模式下通过环形选择 `alt+<left click>` 选择出想要切割的环形边（只要是选中的边都可以，通常是环形边），用 `alt+M` 快捷键打开 `mesh>split` 菜单，在三个选项中选择第二个“用选中的边将分割开来”。此时模型的拓扑结构已经改变，按照所想要的地方切割开来了。
 
@@ -58,7 +58,7 @@ tags:
 
 常用的工具是编辑模式下的手术刀工具 `K` ，不过要注意的是，手术刀工具可以追加非常多的参数，实现很奇妙的功能，如下：
 
-![knife_tool](C:\Code\lovoski.github.io\source\_posts\blender学习和使用（模型编辑）\knife_tool.gif)
+![knife_tool](blender学习和使用（模型编辑）/knife_tool.gif)
 
 在上面展示手术刀工具的时候，用到了两个追加的参数 `A` 和 `C` ，`A` 能够让切割线沿着平行于最标轴的方向切割（或者斜的某个方向），`C` 可以沿着当前视角下的切割线把整个模型”切透“。
 
@@ -68,7 +68,7 @@ tags:
 
 有的时候我们希望给模型的一些边或者所有边给特定的材质，好让这些边看起来更突出，比如下面的效果：
 
-![image-20230825213348377](C:\Code\lovoski.github.io\source\_posts\blender学习和使用（模型编辑）\colored_edges)
+![image-20230825213348377](blender学习和使用（模型编辑）/colored_edges)
 
 在这个图中通过把红色的边选中，`shift+D` 复制并 `P` 分离，转化为曲线，再给曲线指定显示的厚度，就可以为这条曲线单独赋予红色材质。黑色的边是把整个模型复制一份后，添加线框修改器(wireframe modifier)，调整线框的粗细，赋予黑色的材质之后得到的。
 
