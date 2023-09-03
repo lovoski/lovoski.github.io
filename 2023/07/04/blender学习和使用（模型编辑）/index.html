@@ -280,6 +280,18 @@
 <p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/colored_edges" alt="image-20230825213348377"></p>
 <p>在这个图中通过把红色的边选中，<code>shift+D</code> 复制并 <code>P</code> 分离，转化为曲线，再给曲线指定显示的厚度，就可以为这条曲线单独赋予红色材质。黑色的边是把整个模型复制一份后，添加线框修改器(wireframe modifier)，调整线框的粗细，赋予黑色的材质之后得到的。</p>
 <p>当然，因为 blender 允许在编辑模式下为一个模型的不同面赋予不同的材质，如果要突出显示一些面，可以简单地选中想要赋予单独材质的面添加材质。线没办法直接赋予材质，只有具有厚度的曲线或者线框化之后的模型才能赋予材质。</p>
+<h3 id="在选中的顶点添加球体"><a href="#在选中的顶点添加球体" class="headerlink" title="在选中的顶点添加球体"></a>在选中的顶点添加球体</h3><p>这种要求要实现的效果一般如下：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/ridgeline_curve.png" alt="ridgeline_curve"></p>
+<p>也就是在选中的面的重心位置添加一个球体，代表重心这个点。但是如果一个一个手动添加非常麻烦，特别是在点很多的时候，所以在这里用几何节点中的 <code>Instances on Points</code> 实现想要的效果。几何节点在 blender 3.6.1 如下所示：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/geometry_nodes_instances_on_points" alt="image-20230831125021913"></p>
+<p>首先我们要选中希望在重心位置添加球体的面，通过编辑模式下的工具 <code>Poke Faces</code> 将一个三角形面从重心位置分割成三个小三角形，从而得到重心的位置，接下来手动选中所有的重心顶点，复制后分离到一个单独的模型中，对这个模型添加上图中的几何节点，就可以达到预期的效果。</p>
+<p>如果要为这“重心”添加材质，可以用集合节点中的材质节点 <code>Set Material</code> 为所有重心设置材质。同时因为几何节点是基于修改器的，也可以应用修改器之后手动添加材质。</p>
+<h3 id="如何快速制作虚线效果"><a href="#如何快速制作虚线效果" class="headerlink" title="如何快速制作虚线效果"></a>如何快速制作虚线效果</h3><p>制作虚线的步骤和上面的非常类似，也是利用几何节点中的 <code>Instances on Points</code> 节点，实现的效果如下：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/dash" alt="dash"></p>
+<p>要实现上面的效果，在几何节点中的节点为：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/geometry_nodes_dash" alt="image-20230903213259932"></p>
+<p>首先通过 <code>Curve Line</code> 节点创建曲线，然后用 <code>Resample Curve</code> 节点对创建的曲线增加采样，接着把该曲线输入 <code>Instances on Points</code>  节点，设置 instances 为 <code>ico shpere</code> （如果希望是柱状的虚线可以采用圆柱体），然后设置为平滑着色，添加材质，渲染出图。</p>
+<p>要注意的是，为了确保虚线有想要的效果，设置材质时选择 <code>Diffuse BSDF</code> 并把颜色设置为纯黑，这样的材质就可以不受光照的影响，始终显示为纯黑（这部分在之后渲染的笔记中也会介绍）。</p>
 <h3 id="开启按按面着色之后模型的着色有问题"><a href="#开启按按面着色之后模型的着色有问题" class="headerlink" title="开启按按面着色之后模型的着色有问题"></a>开启按按面着色之后模型的着色有问题</h3><p>如果希望渲染一些有棱有角的几何体，可能会开启按面着色。如果有的面理应是一个平面，但是看起来完全不是这样，试试下面的办法。</p>
 <ol>
 <li>可能是在用到了倒角修改器之后产生的，可以在道教修改器的“着色”选项里面找到<code>硬化法线（harden normal）</code> 对效果进行修正。</li>
