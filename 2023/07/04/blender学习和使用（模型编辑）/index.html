@@ -292,6 +292,10 @@
 <p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/geometry_nodes_dash" alt="image-20230903213259932"></p>
 <p>首先通过 <code>Curve Line</code> 节点创建曲线，然后用 <code>Resample Curve</code> 节点对创建的曲线增加采样，接着把该曲线输入 <code>Instances on Points</code>  节点，设置 instances 为 <code>ico shpere</code> （如果希望是柱状的虚线可以采用圆柱体），然后设置为平滑着色，添加材质，渲染出图。</p>
 <p>要注意的是，为了确保虚线有想要的效果，设置材质时选择 <code>Diffuse BSDF</code> 并把颜色设置为纯黑，这样的材质就可以不受光照的影响，始终显示为纯黑（这部分在之后渲染的笔记中也会介绍）。</p>
+<p>除了上面的效果，更多要实现的效果是下面这种。</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/better_dash.png" alt="better_dash"></p>
+<p>这种效果通过创建一条曲线，在这个曲线上取采样点，在每个采样点按照曲线的方向添加圆柱体作为 instance。几何节点的具体实现如下：</p>
+<p><img src="/2023/07/04/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E6%A8%A1%E5%9E%8B%E7%BC%96%E8%BE%91%EF%BC%89/dash_better" alt="image-20230912103721604"></p>
 <h3 id="开启按按面着色之后模型的着色有问题"><a href="#开启按按面着色之后模型的着色有问题" class="headerlink" title="开启按按面着色之后模型的着色有问题"></a>开启按按面着色之后模型的着色有问题</h3><p>如果希望渲染一些有棱有角的几何体，可能会开启按面着色。如果有的面理应是一个平面，但是看起来完全不是这样，试试下面的办法。</p>
 <ol>
 <li>可能是在用到了倒角修改器之后产生的，可以在道教修改器的“着色”选项里面找到<code>硬化法线（harden normal）</code> 对效果进行修正。</li>
