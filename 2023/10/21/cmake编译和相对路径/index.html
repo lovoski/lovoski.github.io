@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lovoski">
+
+
+
+
+
+<title>cmake编译和相对路径 | Lovoski&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/icon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lovoski&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lovoski&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">cmake编译和相对路径</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lovoski</a><br>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十月 21, 2023&nbsp;</a><br>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="编译中相对路径的问题"><a href="#编译中相对路径的问题" class="headerlink" title="编译中相对路径的问题"></a>编译中相对路径的问题</h2><p>我们在编写 c++ 代码的时候经常会在文件里面写如下的代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> loadout = Loader.<span class="built_in">LoadFile</span>(<span class="string">&quot;./resources/bunny.obj&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这样的代码从相对路径中读取需要的文件，但是这里的相对路径指的是编译完成后二进制文件的相对路径，如果我们的二进制文件和源文件不是在同一路径下，是没办法通过这种办法找到读取文件的。</p>
+<p>也就是说，只有在编译后文件的结构如下二进制文件才能正常访问资源文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">base_folder</span><br><span class="line">|</span><br><span class="line">--main.cpp</span><br><span class="line">--main.exe</span><br><span class="line">--resources</span><br><span class="line">	      |</span><br><span class="line">	      --bunny.obj</span><br></pre></td></tr></table></figure>
+
+<p>不过大部分情况下都不是这样，特别是我们在用 <code>cmake</code> 作为编译工具时，二进制文件往往在一个单独的文件夹下，在 <code>CMakeLists.txt</code> 中我们可以用 <code>CMAKE_BINARY_DIR</code> 来表示这个文件夹，默认情况下，这个文件夹在 <code>CMAKE_SOURCE_DIR/build</code> ，也就是项目最底层的 <code>CMakeLists.txt</code> 同一级的 <code>build</code> 文件夹，项目的结构类似于：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">base_folder</span><br><span class="line">|</span><br><span class="line">--main.cpp</span><br><span class="line">--CMakeLists.txt</span><br><span class="line">--build</span><br><span class="line">      |</span><br><span class="line">      --main.exe</span><br><span class="line">--resources</span><br><span class="line">	      |</span><br><span class="line">	      --bunny.obj</span><br></pre></td></tr></table></figure>
+
+<p>实际情况可能会更复杂，因为我们可能在一个主要的项目下通过 <code>add_subdirectory</code> 添加了其他的子项目，每一个子项目也会有自己编译后应该在的文件夹，可以用 <code>CMAKE_CURRENT_BINARY_DIR</code> 或者是 <code>PROJECT_BINARY_DIR</code>。</p>
+<blockquote>
+<p>在 <code>cmake </code> 中，由于可以通过 <code>add_subdirectory</code> 添加一些文件夹作为子项目，为了方便我们确认当前项目的路径，<code>cmake</code> 提供了两种模式的变量，分别是 <code>CMAKE_**</code> 和 <code>PROJECT_**</code> 。</p>
+<p>其中 <code>CMAKE_**</code> 表示的是最底层的 <code>CMakeLists.txt</code> 的属性；<code>PROJECT_**</code> 表示的是当前 <code>CMakeLists.txt</code> 所在项目的属性。</p>
+</blockquote>
+<p> 比如说我们有下面结构的项目：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">base_folder</span><br><span class="line">|</span><br><span class="line">--CMakeLists.txt (a)</span><br><span class="line">--main.cpp</span><br><span class="line">--Lib1</span><br><span class="line">     |</span><br><span class="line">     --CMakeLists.txt (b)</span><br><span class="line">     --lib1.hpp</span><br><span class="line">     --lib1.cpp</span><br><span class="line">     --resources</span><br><span class="line">               |</span><br><span class="line">               --bunny.obj</span><br></pre></td></tr></table></figure>
+
+<p>为了方便接下来的表述，我们称底层的 <code>CMakeLists.txt</code> 为 <code>(a)</code> ，在 <code>Lib1</code> 文件夹下的为 <code>(b)</code> 。</p>
+<p>我们在 <code>(a)</code> 中所写的 <code>CMAKE_SOURCE_DIR</code> 和 <code>PROJECT_SOURCE_DIR</code> 指的都是同一个文件夹，<code>base_folder/</code> 。但是我们在 <code>(b)</code> 中写的两个变量，第一个指的是 <code>base_folder/</code> ，但是第二个指的是 <code>base_folder/Lib1/</code> 。</p>
+<p>也就是 <code>PROJECT_**</code> 类型的变量是针对当前项目的，但是 <code>CMAKE_**</code> 是对于最底层的项目的。有了这样的分层，之后能够大大方便我们正确找到位于不同位置的资源文件。</p>
+<p>比如说我们希望在 <code>(b)</code> 中表示 <code>./resources/bunny.obj</code> ，我们可以在 <code>(b)</code> 中写 <code>CMAKE_SOURCE_DIR/Lib1/resources/bunny.obj</code> 或者是 <code>PROJECT_SOURCE_DIR/resources/bunny.obj</code> ，也就是写成下面的 <code>cmake</code> 代码：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// (b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(BUNNY_MODEL_PATH_1 <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/resources/bunny.obj)</span><br><span class="line"><span class="keyword">set</span>(BUNNY_MODEL_PATH_2 <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/Lib1/resources/bunny.obj)</span><br></pre></td></tr></table></figure>
+
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>在知道了上面的知识之后，我们可以开始着手解决问题了，我们在 <code>c++</code> 文件中有一些相对路径，我们希望找到正确访问这些文件的方法，同时希望能够保留写相对路径的便利，如果之后我们打算分发我们的二进制文件，我们希望能够做一些很简单的修改，也能确保 <code>c++</code> 中的文件不需要改动。</p>
+<p>主要的解决方案有两种，第一种是利用函数 <code>configure_file</code> 让 <code>cmake</code> 帮我们自动生成一些表示了路径的文件，第二种比较直接，我们直接让 <code>cmake</code> 帮我们把所有涉及到的资源文件自动复制到二进制文件的相对路径上去。</p>
+<h3 id="configure-file"><a href="#configure-file" class="headerlink" title="configure_file"></a>configure_file</h3><p>这种方法要求我们自己写一个模板文件，一般命名为 <code>config.h.in</code> ，我们不直接 <code>include</code> 这个文件，而是让 <code>cmake</code> 基于这个文件帮我们生成一个 <code>config.h</code> 文件，我们代码中直接 <code>#include &quot;config.h&quot;</code> 。当然，这个文件只有在我们运行了 <code>cmake config</code> 命令后才会生成。</p>
+<p>这种方式的原理可以理解成，我们让 <code>cmake</code> 告诉 <code>c++</code> 文件自己一些变量的值，以此确保编译后能够正确运行。</p>
+<p>比如我们在 <code>CMakeLists.txt</code> 中已经正确定义了模型文件的路径，并把路径保存到变量 <code>BUNNY_MODEL_PATH</code> 里面，我们可以让 <code>cmake</code> 通过一个宏变量告诉 <code>c++</code> ，<code>BUNNY_MODEL_PATH</code> 是什么。</p>
+<p>我们首先要创建一个 <code>config.h.in</code> 模板文件，这部分可以参考 <code>cmake</code> 提供的<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/configure_file.html">官方文档</a>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// config.h.in</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUNNY_MODEL_PATH <span class="string">&quot;@BUNNY_MODEL_PATH@&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这个模板文件还有很多其他的用法，这里只用到最简单的一种。随后我们在 <code>CMakeLists.txt (b)</code> 里面：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CMakeLists.txt (b)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="keyword">set</span>(BUNNY_MODEL_PATH <span class="variable">$&#123;PROJECT_SOUCE_DIR&#125;</span>/resources/bunny.obj)</span><br><span class="line"></span><br><span class="line"><span class="keyword">configure_file</span>(<span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/config/config.h.in config.h)</span><br><span class="line"><span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+
+<p>这里要注意，设置 <code>BUNNY_MODEL_PATH</code> 一定要在 <code>configure_file</code> 之前。</p>
+<p>我们修改了这些文件后运行 <code>cmake config</code> ，可以看到 当前项目对应的二进制文件夹下生成了一个 <code>config.h</code> 文件，我们在 <code>c++</code> 文件中 <code>#include &quot;config.h&quot;</code>  ，就可以把最开始的代码替换成：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;config.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="type">bool</span> loadout = Loader.<span class="built_in">LoadFile</span>(BUNNY_MODEL_PATH);</span><br></pre></td></tr></table></figure>
+
+<p>现在我们的项目结构为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">base_folder</span><br><span class="line">|</span><br><span class="line">--CMakeLists.txt (a)</span><br><span class="line">--main.cpp</span><br><span class="line">--Lib1</span><br><span class="line">     |</span><br><span class="line">     --CMakeLists.txt (b)</span><br><span class="line">     --lib1.hpp</span><br><span class="line">     --lib1.cpp</span><br><span class="line">     --config</span><br><span class="line">            |</span><br><span class="line">            --config.h.in</span><br><span class="line">     --resources</span><br><span class="line">               |</span><br><span class="line">               --bunny.obj</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当然，我们现在可以举一反三，如果我希望载入的文件非常多，我们可以在 <code>CMakeLists.txt</code> 里面设置一个变量为一整个文件夹的路径，再在 <code>c++</code> 文件中把这两个字符串拼起来：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// c++ file</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;config.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="type">bool</span> loadout = Loader.<span class="built_in">LoadFile</span>(MODEL_PATH <span class="string">&quot;/bunny.obj&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CMakeLists.txt (b)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="keyword">set</span>(MODEL_PATH <span class="variable">$&#123;PROJECT_SOUCE_DIR&#125;</span>/resources)</span><br><span class="line"></span><br><span class="line"><span class="keyword">configure_file</span>(<span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/config/config.h.in config.h)</span><br><span class="line"><span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// config.h.in</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MODEL_PATH <span class="string">&quot;@MODEL_PATH@&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>还有个要提的地方，我们不需要把 <code>config.h</code> 手动复制到任何地方，我们只要在 <code>CMakeLists.txt</code> 中加上：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_include_directories</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span> PRIVATE <span class="variable">$&#123;PROJECT_BINARY_DIR&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>就可以在 <code>cmake config</code> 后自动找到 <code>config.h</code> 。</p>
+<h3 id="复制资源文件到相对路径"><a href="#复制资源文件到相对路径" class="headerlink" title="复制资源文件到相对路径"></a>复制资源文件到相对路径</h3><p>这部分其实大部分只要复制代码就可以了，可以找到很多现成的代码：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CMakeLists.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># copy resources to relative path of binaries</span></span><br><span class="line"><span class="keyword">file</span>(GLOB_RECURSE RESOURCE_FILES <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/resources/**)</span><br><span class="line"><span class="keyword">foreach</span>(RESOURCE_FILE <span class="variable">$&#123;RESOURCE_FILES&#125;</span>)</span><br><span class="line">  <span class="keyword">file</span>(RELATIVE_PATH RESOURCE_REL_PATH <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span> <span class="variable">$&#123;RESOURCE_FILE&#125;</span>)</span><br><span class="line">  <span class="keyword">add_custom_command</span>(<span class="keyword">TARGET</span> <span class="variable">$&#123;MAIN_NAME&#125;</span> POST_BUILD <span class="keyword">COMMAND</span></span><br><span class="line">  <span class="variable">$&#123;CMAKE_COMMAND&#125;</span> -E copy_if_different <span class="variable">$&#123;RESOURCE_FILE&#125;</span></span><br><span class="line">  $&lt;TARGET_FILE_DIR:<span class="variable">$&#123;PROJECT_NAME&#125;</span>&gt;/<span class="variable">$&#123;RESOURCE_REL_PATH&#125;</span>)</span><br><span class="line"><span class="keyword">endforeach</span>()</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码不仅能够复制资源文件到二进制文件的相对路径，还会检查这个资源文件相比于上一次编译有没有发生变化 <code>copy_if_different</code> ，如果变化了就会把更新同步过去。</p>
+
+        </div>
+
+        <!-- 读入保存在_config.yml里面的变量 -->
+        
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lovoski</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/07/06/blender%E5%AD%A6%E4%B9%A0%E5%92%8C%E4%BD%BF%E7%94%A8%EF%BC%88%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C%EF%BC%89/">blender学习和使用（动画制作）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lovoski | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
