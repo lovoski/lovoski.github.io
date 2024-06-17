@@ -27,13 +27,21 @@ Currently, I'm an undergraduate research asistant at [IRC](https://irc.cs.sdu.ed
 </div>
 <div class="paper-text">
 <div class="paper-title">
+<a href="https://www.sciencedirect.com/science/article/abs/pii/S0167839624000256">
 Towards Geodesic Ridge Curve for Region-wise Linear Representation of Geodesic Distance Field
+</a>
 </div>
 <div class="paper-authors">
 <span class="paper-author-myself">Wei Liu*</span>, Pengfei Wang*, Shuangmin Chen, Shiqing Xin, Changhe Tu, Ying He, Wenping Wang
 </div>
 <div class="paper-details">
 GMP 2024. Recommended to Computed Aided Geometric Design (SCI, CCF B).
+</div>
+<div class="paper-additions">
+Relavent Material: 
+<a href="https://drive.google.com/file/d/1CQyYh5741sueX3ZBorJ-mpJBNUU6VAqG/view?usp=sharing">
+presentation
+</a>
 </div>
 </div>
 </div>
