@@ -1,0 +1,12 @@
+extends includes/layout
+
+block wrap_content
+  .blog_list_page(itemscope itemtype='http://schema.org/ItemList')
+    h1 Blog List
+    ul.blog_list
+      each article in page.data
+        if article.is_blog_item
+          li.blog_list_item
+            a.blog_list_title(href=url_for(article.path))= article.title
+            p.blog_list_time= article.date.format('YYYY.MM.DD')
+            p.blog_list_subtitle= article.subtitle

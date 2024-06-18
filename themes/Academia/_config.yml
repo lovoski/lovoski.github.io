@@ -12,6 +12,7 @@ since: 2024
 # 可以选择外链或其他页面
 menu:
   Publications: /#Publications
+  Blog: /Blog
 
 # flink picture will load if avator link calls on error
 loading_bg:
@@ -59,9 +60,12 @@ box_shadow:
 CDN_USE:
   css:
     - /css/index.css
+    - /css/blog.css
+    - /css/katex.min.css
 #    - https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css
     - https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css # fontawesome 5
   js:
     - https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js #/js/third-party/jquery.min.js
     - https://cdn.jsdelivr.net/npm/jquery-pjax@latest/jquery.pjax.min.js
     - /js/main.js
+    - /js/katex.min.js

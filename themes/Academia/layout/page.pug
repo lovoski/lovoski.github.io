@@ -1,6 +1,20 @@
 extends includes/layout
 
-block content
-    .page(itemscope itemtype='http://schema.org/CreativeWork')
-        h2.page-title!= page.title
-        article!= page.content
+block wrap_content
+    if !page.is_blog_item
+        include ./includes/side-card.pug
+    block content
+        if page.is_blog_item
+            .blog_page(itemscope itemtype='http://schema.org/CreativeWork')
+                h2.page-title!= page.title
+                if page.blog_lang === "en"
+                    p.blog_list_time Time created: #{page.date.format("YYYY.MM.DD")}
+                else
+                    p.blog_list_time 创建时间: #{page.date.format("YYYY.MM.DD")}
+                hr
+                p.blog_list_subtitle= page.subtitle
+                article!= page.content
+        else
+            .page(itemscope itemtype='http://schema.org/CreativeWork')
+                h2.page-title!= page.title
+                article!= page.content

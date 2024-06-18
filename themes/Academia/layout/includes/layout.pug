@@ -3,6 +3,7 @@ html(lang=config.language)
     head
         meta(charset='UTF-8')
         meta(http-equiv="X-UA-Compatible" content="IE=edge")
+        meta(name="google-site-verification" content="YstW8jpLjJe7aMxV2YWJ9EJRKqosdK1Tgm4my7dPEr0")
         meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5")
         title=config.title
         meta(name="author" content=config.author)
@@ -13,8 +14,9 @@ html(lang=config.language)
         header#page_header
             include ./header.pug
         main#page_main
-            include ./side-card.pug
-            block content
+            block wrap_content
+                include ./side-card.pug
+                block content
         include ./mobile-nav.pug
         footer#page_footer
             include ./footer.pug
