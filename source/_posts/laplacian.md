@@ -1,6 +1,6 @@
 ---
 title: A breif view of discrete laplacian
-subtitle: 本文从简单介绍了 discrete laplacian 和几种具体的实现
+subtitle: 本文简单介绍了 discrete laplacian 和几种具体的实现
 # If this post should be treated as a blog post
 is_blog_item: true
 # Language used in this blog
