@@ -8,10 +8,8 @@ html(lang=config.language)
         title=config.title
         meta(name="author" content=config.author)
         !=favicon_tag(config.favicon || theme.favicon || '/favicon.ico')
-        script(src=url_for("/js/copy-tex.min.js"))
         each item in theme.CDN_USE.css
             link(rel='stylesheet', href=url_for(item))
-        link(rel="stylesheet", href=url_for("/css/katex.css"))
     body
         header#page_header
             include ./header.pug
