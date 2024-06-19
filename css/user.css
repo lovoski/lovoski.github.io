@@ -27,6 +27,22 @@
   font-size: 16px;
   font-weight: bold;
 }
+.paper-title p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-authors p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-details p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-additions p {
+  margin: 0px;
+  padding: 0px;
+}
 .paper-trailer {
   height: auto;
   width: 300px;
