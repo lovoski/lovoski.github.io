@@ -32,7 +32,7 @@ Towards Geodesic Ridge Curve for Region-wise Linear Representation of Geodesic D
 </a>
 </div>
 <div class="paper-authors">
-<span class="paper-author-myself">Wei Liu*</span>, Pengfei Wang*, Shuangmin Chen, Shiqing Xin, Changhe Tu, Ying He, Wenping Wang
+<span class="paper-author-myself">Wei Liu</span>\*, Pengfei Wang\*, Shuangmin Chen, Shiqing Xin, Changhe Tu, Ying He, Wenping Wang
 </div>
 <div class="paper-details">
 GMP 2024. Recommended to Computed Aided Geometric Design (SCI, CCF B).
