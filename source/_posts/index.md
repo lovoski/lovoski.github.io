@@ -12,8 +12,9 @@ Currently, I'm an undergraduate research asistant at [IRC](https://irc.cs.sdu.ed
 
 ## Experience
 
+- **2024.7-2024.9:** Research Intern at [University of Hong Kong](https://www.cs.hku.hk/)
 - **2021.9-2025.6:** Undergraduate Student, [Shandong University](https://www.sdu.edu.cn/)
-- **2022.10-now:** Research Asistant at [IRC](https://irc.cs.sdu.edu.cn/), [Shandong University](https://www.sdu.edu.cn/)
+- **2022.10-now:** Research Asistant (part time) at [IRC](https://irc.cs.sdu.edu.cn/), [Shandong University](https://www.sdu.edu.cn/)
 
 ## Awards
 
