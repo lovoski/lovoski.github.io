@@ -1,0 +1,55 @@
+.paper-wrapper {
+  border: 2px solid #c2c2c2;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center; /* Vertically center items */
+  justify-content: flex-start; /* Align items to the start of the container */
+  gap: 10px; /* Space between the image and text */
+}
+.paper-author-myself {
+  font-size: 16px;
+  font-weight: bold;
+}
+.paper-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+.paper-authors {
+  font-size: 16px;
+}
+.paper-details {
+  font-size: 16px;
+  font-style: italic;
+}
+.paper-additions {
+  font-size: 16px;
+  font-weight: bold;
+}
+.paper-title p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-authors p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-details p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-additions p {
+  margin: 0px;
+  padding: 0px;
+}
+.paper-trailer {
+  height: auto;
+  width: 300px;
+  object-fit: cover;
+}
+.paper-trailer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
