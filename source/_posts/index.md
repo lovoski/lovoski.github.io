@@ -6,15 +6,12 @@ academia: true
 
 ## Introduction
 
-Hi, I'm Wei Liu (刘威). I'm currently in my final year as an undergraduate student in [Shandong University](https://www.sdu.edu.cn/). At the beginning of my college study, I was admitted by the [Taishan College](https://www.tsxt.sdu.edu.cn/) of [Shandong University](https://www.sdu.edu.cn/).
-
-Currently, I'm an undergraduate research asistant at [IRC](https://irc.cs.sdu.edu.cn/) supervised by [Prof. Shiqing Xin](https://irc.cs.sdu.edu.cn/~shiqing/index.html) at [Shandong University](https://www.sdu.edu.cn/), doing some research about Computational Geometry.
+Hi, I'm Wei Liu (刘威). I'm currently a MPhil student in [The University of Hong Kong](https://www.cds.hku.hk/) supervised by [Prof. Komura, Taku](https://www.cs.hku.hk/index.php/people/academic-staff/taku) doing some research related to character animation. Prior to that I was an undergraduate student in [Shandong University](https://www.sdu.edu.cn/) working closely with [Prof. Shiqing Xin](https://irc.cs.sdu.edu.cn/~shiqing/index.html) studying computational geometry.
 
 ## Experience
 
-- **2024.7-2024.9:** Research Intern at [the University of Hong Kong](https://www.cs.hku.hk/)
+- **2025.9-now:** MPhil Student at [the University of Hong Kong](https://www.cds.hku.hk/)
 - **2021.9-2025.6:** Undergraduate Student, [Shandong University](https://www.sdu.edu.cn/)
-- **2022.10-now:** Research Asistant (part time) at [IRC](https://irc.cs.sdu.edu.cn/), [Shandong University](https://www.sdu.edu.cn/)
 
 ## Awards
 
