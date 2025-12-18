@@ -6,7 +6,7 @@ academia: true
 
 ## Introduction
 
-Hi, I'm Wei Liu (刘威). I'm currently a MPhil student in [The University of Hong Kong](https://www.cds.hku.hk/) supervised by [Prof. Komura, Taku](https://www.cs.hku.hk/index.php/people/academic-staff/taku) doing some research related to character animation. Prior to that I was an undergraduate student in [Shandong University](https://www.sdu.edu.cn/) working closely with [Prof. Shiqing Xin](https://irc.cs.sdu.edu.cn/~shiqing/index.html) studying computational geometry.
+Hi, I'm Wei Liu (刘威). I'm currently a MPhil student in [The University of Hong Kong](https://www.cds.hku.hk/) advised by [Prof. Komura, Taku](https://www.cs.hku.hk/index.php/people/academic-staff/taku) doing some research related to character animation. Prior to that I was an undergraduate student in [Shandong University](https://www.sdu.edu.cn/) working closely with [Prof. Shiqing Xin](https://irc.cs.sdu.edu.cn/~shiqing/index.html) studying computational geometry.
 
 ## Experience
 
